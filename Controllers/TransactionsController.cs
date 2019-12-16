@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication3.Repositories.Entities;
 using WebApplication3.Repositories;
-using System.Diagnostics;
-using WebApplication3.Models.ViewModels;
-using WebApplication3.Repositories.Exceptions;
+using WebApplication3.Repositories.Entities;
 
 namespace WebApplication3.Controllers
 {
-    public class TransactionsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TransactionsController : ControllerBase
     {
         private readonly ITransactionsRepository _transactionsRepository;
 
@@ -18,190 +18,108 @@ namespace WebApplication3.Controllers
             _transactionsRepository = transactionsRepository;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        [Route("hello")]
+        public ActionResult<List<TransactionEntity>> Get()
         {
-            return View();
+            return Ok("Hello world!");
         }
 
-        public IActionResult Credit()
+        [HttpGet]
+        [Route("hello/{name}")]
+        public ActionResult<List<TransactionEntity>> Get(string name)
         {
-            return View();
+            return Ok("Hello world! Welcome " + name);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("credit")]
         public async Task<IActionResult> Credit(TransactionEntity obj)
         {
-            try
+            if (obj.Account <= 0)
+                return BadRequest(new { error = "Account number must be greater than 0" });
+
+            if (obj.IsDebit)
+                return BadRequest(new { error = "Operation must be Credit" });
+
+            if (obj.Value <= 0)
+                return BadRequest(new { error = "Cannot credit account with value less than 0 or 0" });
+
+            await _transactionsRepository.InsertAsync(obj);
+            return Ok(new
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(obj);
-                }
-
-                if (obj.Account <= 0)
-                {
-                    throw new TransactionException("Account number must be greater than 0");
-                }
-
-                if (obj.IsDebit)
-                {
-                    throw new TransactionException("Operation must be Credit");
-                }
-
-                if (obj.Value <= 0)
-                {
-                    throw new TransactionException("Cannot credit account with value less than 0 or 0");
-                }
-
-                await _transactionsRepository.InsertAsync(obj);
-                return RedirectToAction(nameof(Success), new { Message = "Successfully inserted credits", obj.Value, Balance = await _transactionsRepository.BalanceAsync(obj.Account) });
-            }
-            catch (ApplicationException e)
-            {
-                return RedirectToAction(nameof(Error), new { e.Message });
-            }
-        }
-
-        public IActionResult Debit()
-        {
-            return View();
+                Message = "Successfully inserted credits",
+                obj.Value,
+                Balance = await _transactionsRepository.BalanceAsync(obj.Account)
+            });
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Route("debit")]
         public async Task<IActionResult> Debit(TransactionEntity obj)
         {
-            if (!ModelState.IsValid)
+            if (obj.Account <= 0)
+                return BadRequest(new { error = "Account number must be greater than 0" });
+
+            if (await _transactionsRepository.FindByAccountAsync(obj.Account) == null)
+                return NotFound(new { error = "Account not found" });
+
+            if (!obj.IsDebit)
+                return BadRequest(new { error = "Operation must be Debit" });
+
+            if (obj.Value <= 0)
+                return BadRequest(new { error = "Cannot debit account with value less than 0 or 0" });
+
+            if (await _transactionsRepository.BalanceAsync(obj.Account) < obj.Value)
+                return BadRequest(new { error = "Balance must be greater than amount to be debited" });
+
+            await _transactionsRepository.InsertAsync(obj);
+            return Ok(new
             {
-                return View();
-            }
-
-            try
-            {
-                if (obj.Account <= 0)
-                {
-                    throw new TransactionException("Account number must be greater than 0");
-                }
-
-                if (await _transactionsRepository.FindByAccountAsync(obj.Account) == null)
-                {
-                    throw new NotFoundException("Account not found");
-                }
-
-                if (!obj.IsDebit)
-                {
-                    throw new TransactionException("Operation must be Debit");
-                }
-
-                if (obj.Value <= 0)
-                {
-                    throw new TransactionException("Cannot debit account with value less than 0 or 0");
-                }
-
-                if (await _transactionsRepository.BalanceAsync(obj.Account) < obj.Value)
-                {
-                    throw new TransactionException("Balance must be greater than amount to be debited");
-                }
-
-                await _transactionsRepository.InsertAsync(obj);
-                return RedirectToAction(nameof(Success), new { Message = "Successfully debited credits", obj.Value, Balance = await _transactionsRepository.BalanceAsync(obj.Account) });
-            }
-            catch (ApplicationException e)
-            {
-                return RedirectToAction(nameof(Error), new { e.Message });
-            }
-
+                Message = "Successfully debited credits",
+                obj.Value,
+                Balance = await _transactionsRepository.BalanceAsync(obj.Account)
+            });
         }
 
-        public IActionResult IndexAccountExtract()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        [Route("accountextract/{account}")]
         public async Task<IActionResult> AccountExtract(int? account)
         {
-            try
-            {
-                if (!account.HasValue)
-                    return RedirectToAction(nameof(Error), new { message = "Account not provided" });
+            if (!account.HasValue)
+                return BadRequest(new { error = "Account not provided" });
 
-                if (account.Value <= 0)
-                    return RedirectToAction(nameof(Error), new { message = "Account number must be greater than 0" });
+            if (account.Value <= 0)
+                return BadRequest(new { error = "Account number must be greater than 0" });
 
-                if (await _transactionsRepository.FindByAccountAsync(account.Value) == null)
-                    throw new NotFoundException("Account not found");
+            if (await _transactionsRepository.FindByAccountAsync(account.Value) == null)
+                return NotFound(new { error = "Account not found" });
 
-                ViewData["account"] = account;
-                var model = await _transactionsRepository.ExtractAsync(account);
-                return View(model);
-            }
-            catch (ApplicationException e)
-            {
-                return RedirectToAction(nameof(Error), new { e.Message });
-            }
+            var model = await _transactionsRepository.ExtractAsync(account);
+            return Ok(new { data = model });
         }
 
-        public IActionResult IndexMonthlyReport()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        [Route("monthlyreport/{year}/{account}")]
         public async Task<IActionResult> MonthlyReport(int? account, int? year)
         {
-            try
-            {
-                if (!account.HasValue)
-                    return RedirectToAction(nameof(Error), new { message = "Account not provided" });
+            if (!account.HasValue)
+                return BadRequest(new { error = "Account not provided" });
 
-                if (account.Value <= 0)
-                    return RedirectToAction(nameof(Error), new { message = "Account number must be greater than 0" });
+            if (account.Value <= 0)
+                return BadRequest(new { error = "Account number must be greater than 0" });
 
-                if (!year.HasValue)
-                    return RedirectToAction(nameof(Error), new { message = "Year not provided" });
+            if (!year.HasValue)
+                return BadRequest(new { error = "Year not provided" });
 
-                if (year.Value < 1900 || year.Value > DateTime.Now.Year)
-                    return RedirectToAction(nameof(Error), new { message = "Year is not valid" });
+            if (year.Value < 1900 || year.Value > DateTime.Now.Year)
+                return BadRequest(new { error = "Year is not valid" });
 
-                if (await _transactionsRepository.FindByAccountAsync(account.Value) == null)
-                    throw new NotFoundException("Account not found");
+            if (await _transactionsRepository.FindByAccountAsync(account.Value) == null)
+                return NotFound(new { error = "Account not found" });
 
-                ViewData["account"] = account;
-                ViewData["year"] = year;
-                var model = await _transactionsRepository.MonthlyReportAsync(account, year);
-                return View(model);
-            }
-            catch (ApplicationException e)
-            {
-                return RedirectToAction(nameof(Error), new { e.Message });
-            }
-        }
-
-        public IActionResult Success(string message, double value, double balance)
-        {
-            var viewModel = new SuccessViewModel
-            {
-                Message = message,
-                Value = value,
-                Balance = balance
-            };
-
-            return View(viewModel);
-        }
-
-        public IActionResult Error(string message)
-        {
-            var viewModel = new ErrorViewModel
-            {
-                Message = message,
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-            };
-
-            return View(viewModel);
+            var model = await _transactionsRepository.MonthlyReportAsync(account, year);
+            return Ok(new { data = model });
         }
     }
 }

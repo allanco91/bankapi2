@@ -23,7 +23,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -49,7 +49,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -73,7 +73,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -97,7 +97,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -121,7 +121,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -145,7 +145,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj = new TransactionEntity
             {
@@ -180,7 +180,7 @@ namespace NUnitTestProject1
 
             mok.Setup(a => a.FindByAccountAsync(It.IsAny<int>())).Returns(Task.FromResult(obj));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj2 = new TransactionEntity
             {
@@ -207,7 +207,7 @@ namespace NUnitTestProject1
             var mok = new Mock<ITransactionsRepository>();
 
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj2 = new TransactionEntity
             {
@@ -229,7 +229,7 @@ namespace NUnitTestProject1
             var mok = new Mock<ITransactionsRepository>();
 
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj2 = new TransactionEntity
             {
@@ -262,7 +262,7 @@ namespace NUnitTestProject1
 
             mok.Setup(a => a.FindByAccountAsync(It.IsAny<int>())).Returns(Task.FromResult(obj));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj2 = new TransactionEntity
             {
@@ -295,7 +295,7 @@ namespace NUnitTestProject1
 
             mok.Setup(a => a.FindByAccountAsync(It.IsAny<int>())).Returns(Task.FromResult(obj));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             TransactionEntity obj2 = new TransactionEntity
             {
@@ -316,7 +316,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.Debit(new TransactionEntity
             {
@@ -348,7 +348,7 @@ namespace NUnitTestProject1
             mok.Setup(a => a.BalanceAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(10.0));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.Debit(new TransactionEntity
             {
@@ -380,7 +380,7 @@ namespace NUnitTestProject1
             mok.Setup(a => a.BalanceAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(60.0));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.Debit(new TransactionEntity
             {
@@ -401,7 +401,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             mok.Setup(a => a.FindByAccountAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(
@@ -424,7 +424,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.AccountExtract(1);
 
@@ -437,7 +437,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.AccountExtract(null);
 
@@ -450,7 +450,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.AccountExtract(-50);
 
@@ -463,7 +463,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.AccountExtract(0);
 
@@ -478,7 +478,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             mok.Setup(a => a.FindByAccountAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult(
@@ -501,7 +501,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(1, 2019);
 
@@ -514,7 +514,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(null, 1);
 
@@ -538,7 +538,7 @@ namespace NUnitTestProject1
                         Value = 0.0
                     }));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(1, null);
 
@@ -551,7 +551,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(null, null);
 
@@ -564,7 +564,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(-50, 2019);
 
@@ -577,7 +577,7 @@ namespace NUnitTestProject1
         {
             var mok = new Mock<ITransactionsRepository>();
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(0, 2019);
 
@@ -601,7 +601,7 @@ namespace NUnitTestProject1
                         Value = 0.0
                     }));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(1, 1899);
 
@@ -625,7 +625,7 @@ namespace NUnitTestProject1
                         Value = 0.0
                     }));
 
-            var controller = new TransactionsController(mok.Object);
+            var controller = new TransactionsOldController(mok.Object);
 
             var result = await controller.MonthlyReport(1, DateTime.Now.Year + 1);
 
