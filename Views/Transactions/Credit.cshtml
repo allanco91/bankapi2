@@ -1,0 +1,28 @@
+﻿@model WebApplication3.Repositories.Entities.TransactionEntity
+@{
+    ViewData["Title"] = "Credit";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Credit">
+    <div class="form-group">
+        <input type="hidden" asp-for="IsDebit" value="false" />
+        <input type="hidden" asp-for="Date" value="@DateTime.Now" />
+        <label asp-for="Account" class="col-form-label"></label>
+        <input asp-for="Account" class="form-control" />
+        <span asp-validation-for="Account" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Value" class="col-form-label"></label>
+        <input asp-for="Value" class="form-control" />
+        <span asp-validation-for="Value" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-success" />
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

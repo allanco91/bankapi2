@@ -1,0 +1,15 @@
+﻿@model WebApplication3.Models.ViewModels.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h2 class="text-danger">@ViewData["Title"]</h2>
+<h4 class="text-danger">@Model.Message</h4>
+<hr />
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}

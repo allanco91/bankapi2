@@ -1,0 +1,15 @@
+﻿@model WebApplication3.Models.ViewModels.SuccessViewModel
+@{
+    ViewData["Title"] = "Success";
+}
+
+<h2 class="text-success">@ViewData["Title"]</h2>
+<h4 class="text-primary">@Model.Message</h4>
+<hr />
+
+<p>
+    <strong>Value:</strong> <code>@Model.Value.ToString("F2")</code>
+</p>
+<p>
+    <strong>New balance:</strong> <code>@Model.Balance.ToString("F2")</code>
+</p>

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<WebApplication3.Repositories.Entities.TransactionEntity>
+@{
+    ViewData["Title"] = "Account Extract";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="AccountExtract">
+    <div class="form-group">
+        <label for="account" class="col-form-label"></label>
+        <input for="account" type="number" class="form-control" name="account" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Show" class="btn btn-success" />
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Extract of account number: @ViewData["account"]</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Value)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.IsDebit ? "table-danger" : "table-success")">
+                            <td>
+                                @Html.DisplayFor(Model => item.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(Model => item.Value)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <td>
+                            Balance:
+                        </td>
+                        <td>
+                            @Model.Sum(obj => obj.Value).ToString("F2")
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</form>
+
